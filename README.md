@@ -35,4 +35,4 @@ For each additional replicate, add an additional column
 intersectBed -wao -a pooled_peaks.broadPeak -b donor2_peaks.broadPeak | cut -f 1,2,3,4,5,6,7,8,9,10,12
 ```
 
-<img src="https://github.com/CebolaLab/Replicated-peaks/blob/main/Figures/Intersection-output.png" width="600">
+<img src="https://github.com/CebolaLab/Replicated-peaks/blob/main/Figures/Intersection-output.png" width="800">
