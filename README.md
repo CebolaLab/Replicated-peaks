@@ -29,10 +29,8 @@ For three replicates:
 intersectBed -wao -a pooled_peaks.broadPeak -b donor1_peaks.broadPeak | cut -f 1,2,3,4,5,6,7,8,9,11 | intersectBed -wao -a - -b donor2_peaks.broadPeak | cut -f 1,2,3,4,5,6,7,8,9,10,12 intersectBed -wao -a - -b donor3_peaks.broadPeak | cut -f 1,2,3,4,5,6,7,8,9,10,11,13
 ```
 
-For each additional replicate, add an additional column 
+For each additional replicate, add an additional column to the penultimate value and increase the last column number by 1 (i.e. 9,10,11,13 becomes 9,10,11,12,14).
 
-```bash
-intersectBed -wao -a pooled_peaks.broadPeak -b donor2_peaks.broadPeak | cut -f 1,2,3,4,5,6,7,8,9,10,12
-```
+The output file will show the contents of the pooled peak file, with additional columns appended to the end, corresponding to the start coordinate of the peak overlap with the individual replicate. If the pooled peak does not overlap a peak within the replicate, a '-1' is shown. 
 
 <img src="https://github.com/CebolaLab/Replicated-peaks/blob/main/Figures/Intersection-output.png" width="800">
