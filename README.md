@@ -1,4 +1,4 @@
-# Defining replicated peaks (macs2())
+# Defining replicated peaks (macs2)
 
 This Github contains a short guide to defining replicated peaks from the output of macs2.
 
@@ -13,7 +13,7 @@ The files required for this analysis include:
 Please see the previous tutorials https://github.com/CebolaLab/ATAC-seq and https://github.com/CebolaLab/ChIPmentation for instructions on how to generate these files.
 
 
-The pooled peaks will be intersected with the peak files for the individual replicates. 
+The *pooled* peaks will be intersected with the peak files for the individual replicates. 
 
 Pooled peak.
 
@@ -34,3 +34,9 @@ For each additional replicate, add an additional column to the penultimate value
 The output file will show the contents of the pooled peak file, with additional columns appended to the end, corresponding to the start coordinate of the peak overlap with the individual replicate. If the pooled peak does not overlap a peak within the replicate, a '-1' is shown. 
 
 <img src="https://github.com/CebolaLab/Replicated-peaks/blob/main/Figures/Intersection-output.png" width="800">
+
+```bash
+grep '\-1' tmp
+```
+qfirstbatch_feb_noCB8
+awk -F '\-1' '{print NF-1}' tmpSp
