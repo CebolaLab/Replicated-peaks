@@ -80,10 +80,6 @@ The output file will show the contents of the pooled peak file, with additional 
 
 <img src="https://github.com/CebolaLab/Replicated-peaks/blob/main/Figures/Intersection-output.png" width="800">
 
-```bash
-grep '\-1' tmp
-```
-
 This information can be used to obtain the number of individual replicates which the pooled peak overlaps, by counting the number of '-1' values (no overlap) per line.
 
 A python script is then used to filter the file and is run using: `python filter.py -total [] -min [] -input peaks-overlap.bed -cols []` where -total is the total number of replicates, -min is the number of replicates required to define replicated peaks (default=2) and -cols is the number of columns in the bed files (one value required for all files).
