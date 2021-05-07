@@ -13,13 +13,13 @@ The files required for this analysis include:
 Please see the previous tutorials https://github.com/CebolaLab/ATAC-seq and https://github.com/CebolaLab/ChIPmentation for instructions on how to generate these files.
 
 
-This shell script:
+The first step runs this shell script:
 
 ```bash
 sh define_replicated_peaks.sh n pooled_peaks.bed donor1_peaks.bed,donor2_peaks.bed... ncol
 ```
 
-Where n, the number of individual replicates, is followed by a the pooled peaks file, which is followed by a comma seperated list with the individual replicate files, then the number of columns in the input bed files (this should be the same for all bed files).
+Where n, the total number of individual replicates, is followed by the name of the pooled peaks file, which is followed by a comma seperated list with the individual replicate files, then the number of columns in the input bed files (this should be the same for all bed files).
 
 The contents of the shell script are shown below:
 
