@@ -85,14 +85,15 @@ This information can be used to obtain the number of individual replicates which
 A python script is then used to filter the file and is run using: `python filter.py -total [] -min [] -input peaks-overlap.bed -cols []` where -total is the total number of replicates, -min is the number of replicates required to define replicated peaks (default=2) and -cols is the number of columns in the bed files (one value required for all files).
 
 ```python
+#filter.py
 import argparse
 parser = argparse.ArgumentParser()
 
 #Arguments to the script include a comma-seperated list of peak files, the type of peaks and the output file name
 parser.add_argument('-total', type=int, metavar='Number of replicates included', help='This should be the total number of replicates included in the experiment.')
-parser.add_argument('-min', type=int, metavar='Number of minimum individual replicates required to define a replicated peak.', help='This should be the total number of replicates included in the experiment.',default=2)
+parser.add_argument('-min', type=int, metavar='Number of minimum individual replicates required to define a replicated peak.', help='This should be the number of replicates in which a peak should be present to be defined as a replicated peak.',default=2)
 parser.add_argument('-input',type=str, metavar='Input file from previous step')
-parser.add_argument('-cols',type=str, metavar='Number of columns in the bed files.')
+parser.add_argument('-cols',type=int, metavar='Number of columns in the bed files.')
 
 args = parser.parse_args()
 
@@ -108,6 +109,73 @@ for line in data.readlines():
 out_file.close()
 data.close()
 ```
+
+If there is no pooled peak file, an alternative would be to generate a file with the combined peaks from all the individual samples. Any overlapping peaks will be cut so that the final coordinates are the smallest overlapping coordinates.
+
+Run the define_overall_peaks.sh scipt (shown below) with the following command line:
+
+```bash
+sh define_replicated_peaks.sh n donor1_peaks.bed,donor2_peaks.bed... ncol
+```
+
+```bash
+#define_overall_peaks.sh
+
+declare -i n
+declare -i max
+n=$1
+list=$2
+IFS=',' read -r -a array <<< "$list"
+
+min=1
+max=$3
+extra=$(($max + 2))
+columns=$(echo $(seq -s, 1 $max),$extra)
+
+n=$(($n - 1))
+total=$(($n - 2))
+
+touch tmp1.bed
+
+for x in $(seq 0 $n)
+do
+	intersectBed -wao -a ${array[0]} -b ${array[$x]} | cut -f $columns > tmp.bed
+	intersectBed -v -a ${array[0]} -b ${array[$x]} | cut -f $columns >> tmp.bed
+	intersectBed -v -a ${array[$x]} -b ${array[0]} | cut -f $columns >> tmp.bed
+done
+
+#Replicate 1-2, 1-3
+for y in $(seq 1 $n)
+
+	#Replicate
+	for x in $(seq 1 $n)
+	do
+		intersectBed -wao -a tmp.bed -b ${array[$x]} | cut -f $columns > tmp_"$y".bed
+		intersectBed -v -a tmp_"$y".bed -b ${array[$x]} | cut -f $columns >> tmp_"$y".bed
+		intersectBed -v -a ${array[$x]} -b tmp_"$y".bed | cut -f $columns >> tmp_"$y".bed
+		mv tmp_"$y".bed tmp.bed
+	done
+
+
+
+max=$(($max + 1))
+extra=$(($extra + 1))
+
+columns=$(echo $(seq -s, 1 $max),$extra)
+
+for x in $(seq 2 $n)
+do
+     intersectBed -wao -a peaks-overlap.bed -b "${array[$x-1]}" | cut -f $columns > tmp
+     mv tmp peaks-overlap.bed
+     max=$(($max + 1))
+     extra=$(($extra + 1))
+     columns=$(echo $(seq -s, 1 $max),$extra)
+done
+```
+
+
+
+
 
 
 
