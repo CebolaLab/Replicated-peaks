@@ -16,10 +16,10 @@ Please see the previous tutorials https://github.com/CebolaLab/ATAC-seq and http
 The first step runs this shell script:
 
 ```bash
-sh define_replicated_peaks.sh n min pooled_peaks.bed donor1_peaks.bed,donor2_peaks.bed... ncol
+sh define_replicated_peaks.sh n min pooled_peaks.bed donor1_peaks.bed,donor2_peaks.bed...
 ```
 
-Where n, the total number of individual replicates, is followed by the name of the pooled peaks file, which is followed by a comma seperated list with the individual replicate files, then the number of columns in the input bed files (this should be the same for all bed files).
+Where n, the total number of individual replicates, is followed by the minimum number of replicates you require to define a "replicated" peak (e.g. a minimum of two replicates). Then, the name of the pooled peaks file should be followed by a comma seperated list with the individual replicate files.
 
 The contents of the shell script are shown below:
 
