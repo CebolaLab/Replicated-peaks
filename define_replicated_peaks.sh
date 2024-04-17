@@ -1,33 +1,3 @@
-# Defining replicated peaks (macs2)
-
-This Github contains a short guide to defining replicated peaks from the output of macs2.
-
-The input can be **any number of replicates**, and you define the **minimum number of individual samples** the replicated peaks should appear in. 
-
-The output replicated peaks are defined as peaks present in the **pooled** analysis and which are independently called in **n or more** biological replicates (you decide the n).
-
-The files required for this analysis include:
-
-- macs2 pooled peaks
-- macs2 peaks for individual samples
-
-Please see the previous tutorials https://github.com/CebolaLab/ATAC-seq and https://github.com/CebolaLab/ChIPmentation for instructions on how to generate these files.
-
-The first step is to download the file `define_replicated_peaks.sh` (contents at the bottom of the page).
-
-You can then run the script as shown below. I suggest you copy all broadPeak files to the working directory. The individual replicate files should be provided as a comma seperated list (the example below shows three samples, but you can have more than three). The arguments:
-
-- `-p` Pooled peak file
-- `-i` Individual peak files in a comma separated list."
-- `-m` argument should include the minimum number of replicates you want your replicated peaks to be found in.
-
-```bash
-bash define_replicated_peaks.sh -p pooled_peaks.broadPeak -i sample_1.broadPeak,sample_2.broadPeak,sample_3.broadPeak -m 2
-```
-The contents of the shell script are shown below:
-
-```bash
-#define_replicated_peaks.sh
 #!/bin/bash
 
 while getopts ":p:i:m:" opt; do
@@ -101,4 +71,3 @@ echo "$replicatedn peaks are replicated in at least $min donors."
 
 rm pooled_peaks.bed
 rm pooled_intersections.bed
-```
