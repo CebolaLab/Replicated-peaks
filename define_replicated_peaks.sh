@@ -53,13 +53,13 @@ done
 # Define sort command based on chromosome order file
 if [ "$order" = "default" ]; then
   echo "No valid chromosome order file provided, defaulting to sort -k1V,1 -k2,2n."
-  sort_cmd="sort -k1V,1 -k2,2n | uniq"
+  sort_cmd="sort -k1V,1 -k2,2n"
 else
-  sort_cmd="bedtools sort -g $order -i - | uniq"
+  sort_cmd="bedtools sort -g $order -i -"
 fi
 
 # Sort the pooled peak file
-cut -f 1-3 $pooled | $sort_cmd > pooled_peaks.bed
+cut -f 1-3 $pooled | $sort_cmd | uniq > pooled_peaks.bed
 
 # Set the number of replicates using the array length
 nreplicates=${#array[@]}
@@ -112,3 +112,7 @@ echo "Replicated peaks saved to replicated_peaks.bed"
 rm pooled_peaks.bed
 rm pooled_intersections.bed
 
+# Clean up temporary files
+rm -f tmp
+echo "Temporary files cleaned up."
+# End of script
