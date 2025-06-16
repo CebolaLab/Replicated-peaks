@@ -2,7 +2,9 @@
 #!/bin/bash
 # sh define_replicated_peaks.sh to see the help message
 usage() {
-  echo "Usage: $0 [-p pooled_peaks.bed] [-i individual_peaks1.bed,individual_peaks2.bed,...] [-m min_replicates]"
+  echo "Usage: $0 [-p pooled_peaks.bed] [-i individual_peaks1.bed,individual_peaks2.bed,...] [-m min_replicates] [-g chromosome_order_file]"
+  echo "Options:"
+  echo "  -h  Show this help message"
   echo "  -p  Path to the pooled peaks file (narrowPeak, broadPeak or bed format)"
   echo "  -i  Comma-separated list of individual peaks files"
   echo "  -m  Minimum number of donors for a peak to be considered replicated"
@@ -11,6 +13,11 @@ usage() {
 }
 # Check if no arguments are provided
 if [ $# -eq 0 ]; then
+  usage
+fi
+
+# If -h is provided, show the help message
+if [[ "$1" == "-h" ]]; then
   usage
 fi
 
