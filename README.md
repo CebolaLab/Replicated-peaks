@@ -76,6 +76,7 @@ while getopts ":p:i:m:g:" opt; do
 	    echo "[-p] narrowPeak, broadPeak or bed format pooled peaks file from macs2."
 	    echo "[-i] Individual peak files in a comma separated list."
 	    echo "[-m] Minimum number of donors for replicated peaks."
+	    echo "[-g] Chromosome order file for sorting (optional)."
       ;;
   esac
 done
@@ -83,19 +84,19 @@ done
 # Define sort command based on chromosome order file
 if [ "$order" = "default" ]; then
   echo "No valid chromosome order file provided, defaulting to sort -k1V,1 -k2,2n."
-  sort_cmd="sort -k1V,1 -k2,2n | uniq"
+  sort_cmd="sort -k1V,1 -k2,2n"
 else
-  sort_cmd="bedtools sort -g $order -i - | uniq"
+  sort_cmd="bedtools sort -g $order -i -"
 fi
 
 # Sort the pooled peak file
-cut -f 1-3 $pooled | $sort_cmd > pooled_peaks.bed
+cut -f 1-3 $pooled | $sort_cmd | uniq > pooled_peaks.bed
 
 # Set the number of replicates using the array length
 nreplicates=${#array[@]}
 
 # Intersect the pooled peak file with the first individual donor ${array[0]}
-cut -f 1-3 ${array[0]} | $sort_cmd | intersectBed -c -e -f 0.5 -F 0.5 -a pooled_peaks.bed -b - > pooled_intersections.bed
+cut -f 1-3 ${array[0]} | $sort_cmd | uniq | intersectBed -c -e -f 0.5 -F 0.5 -a pooled_peaks.bed -b - > pooled_intersections.bed
 
 #Check if the first intersection file is empty
 if [ ! -s pooled_intersections.bed ]; then
@@ -105,7 +106,7 @@ fi
 
 #Loop over the rest of the individual donor files
 for donor in $(seq 1 $((nreplicates -1))); do
-	cut -f 1-3 ${array[$donor]} | $sort_cmd | intersectBed -c -e -f 0.5 -F 0.5 -a pooled_intersections.bed -b - > tmp
+	cut -f 1-3 ${array[$donor]} | $sort_cmd | uniq | intersectBed -c -e -f 0.5 -F 0.5 -a pooled_intersections.bed -b - > tmp
 	# Rename the temporary file to pooled_intersections.bed
 	mv tmp pooled_intersections.bed
 done
@@ -135,7 +136,7 @@ sed '1d' replicated_peaks.txt | awk -v OFS='\t' -v FS='\t' -v rep=$(( 1 + $maxco
 replicatedn=$(wc -l replicated_peaks.bed | awk '{print $1}')
 echo "$replicatedn peaks are replicated in at least $min donors." 
 
-cat replicated_peaks.bed | $sort_cmd > tmp; mv tmp replicated_peaks.bed
+cat replicated_peaks.bed | $sort_cmd | uniq > tmp; mv tmp replicated_peaks.bed
 echo "Replicated peaks saved to replicated_peaks.bed"
 
 rm pooled_peaks.bed
