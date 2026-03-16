@@ -8,8 +8,8 @@ The output replicated peaks are defined as peaks present in the **pooled** analy
 
 The files required for this analysis include:
 
-- Pooled peaks (`.broadPeak`, `.narrowPeak`, `.bed`)
-- Peaks for individual samples (`.broadPeak`, `.narrowPeak`, `.bed`)
+- Pooled peaks (e.g. `.broadPeak`, `.narrowPeak`, `.bed`)
+- Peaks for individual samples (e.g. `.broadPeak`, `.narrowPeak`, `.bed`)
 
 Please see the previous tutorials https://github.com/CebolaLab/ATAC-seq and https://github.com/CebolaLab/ChIPmentation for instructions on how to generate these files.
 
